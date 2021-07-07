@@ -8,14 +8,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func init() {
-    // loads values from .env into the system
-    if err := godotenv.Load(); err != nil {
-        log.Panic(err)
-    }
-}
-
 func main() {
+	godotenv.Load()
 	token := os.Getenv("BOT_TOKEN")
 
 	bot, err := tgbotapi.NewBotAPI(token)
