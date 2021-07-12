@@ -2,11 +2,16 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/joho/godotenv"
 )
+
+func MainHandler(resp http.ResponseWriter, _ *http.Request) {
+    resp.Write([]byte("Hi there! I'm DndSpellsBot!"))
+}
 
 func main() {
 	godotenv.Load()
@@ -24,7 +29,13 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	updates, err := bot.GetUpdatesChan(u)
+	// Для получения через long pooling. Сейчас нам это не нужно.
+	// updates, err := bot.GetUpdatesChan(u) 
+	// Для получения через webhook
+	updates := bot.ListenForWebhook("/" + bot.Token)
+
+	http.HandleFunc("/", MainHandler)
+    go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 
 	for update := range updates {
 		if update.Message == nil { // ignore any non-Message Updates
