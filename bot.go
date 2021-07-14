@@ -10,7 +10,7 @@ import (
 )
 
 func MainHandler(resp http.ResponseWriter, _ *http.Request) {
-    resp.Write([]byte("Hi there! I'm DndSpellsBot!"))
+	resp.Write([]byte("Hi there! I'm WeatherAveragerBot!"))
 }
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
- 
+
 	bot.Debug = true
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
@@ -29,22 +29,33 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	// Для получения через long pooling. Сейчас нам это не нужно.
-	// updates, err := bot.GetUpdatesChan(u) 
-	// Для получения через webhook
+	// Для получения через long pooling. Включить для локального запуска
+	// updates, err := bot.GetUpdatesChan(u)
+	// Для получения через webhook. Включить для деплоя на heroku
 	updates := bot.ListenForWebhook("/" + bot.Token)
 
 	http.HandleFunc("/", MainHandler)
-    go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 
 	for update := range updates {
+		reply := "Не знаю что сказать🧐Попробуйте написать /help, чтобы узнать, что я могу"
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
 		}
 
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+		switch update.Message.Command() {
+		case "start":
+			reply = "Привет🖐. Я телеграм-бот, усредняющий погоду из различных популярных " +
+			"сервисов погоды. Напиши /help, чтобы узнать, что я могу"
+		case "hello":
+			reply = "world😜"
+		case "weather":
+			reply = "Погода Дубны"
+		}
+
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, reply)
 		msg.ReplyToMessageID = update.Message.MessageID
 
 		bot.Send(msg)
