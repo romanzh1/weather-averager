@@ -1,0 +1,50 @@
+package main
+
+import (
+	"log"
+	"net/http"
+	"os"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/joho/godotenv"
+	"github.com/romanzh1/weather-averager/internal/message"
+)
+
+func MainHandler(resp http.ResponseWriter, _ *http.Request) {
+	resp.Write([]byte("Hi there! I'm WeatherAveragerBot!"))
+}
+
+func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Panic(err)
+	}
+	token := os.Getenv("BOT_TOKEN")
+
+	bot, err := tgbotapi.NewBotAPI(token)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	bot.Debug = true
+
+	log.Printf("Authorized on account %s", bot.Self.UserName)
+
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+
+	// Для получения через long pooling. Включить для локального запуска
+	updates, err := bot.GetUpdatesChan(u)
+	// Для получения через webhook. Включить для деплоя на heroku
+	// updates, err := bot.ListenForWebhook("/" + bot.Token)
+	// http.HandleFunc("/", MainHandler)
+	// go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	err = message.SendResponse(updates, bot)
+	if err != nil {
+		log.Panic(err)
+	}
+}

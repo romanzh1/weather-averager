@@ -1,41 +1,15 @@
-package main
+package message
 
 import (
+	"fmt"
 	"log"
-	"net/http"
-	"os"
+	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/joho/godotenv"
+	"github.com/romanzh1/weather-averager/pkg/api"
 )
 
-func MainHandler(resp http.ResponseWriter, _ *http.Request) {
-	resp.Write([]byte("Hi there! I'm WeatherAveragerBot!"))
-}
-
-func main() {
-	godotenv.Load()
-	token := os.Getenv("BOT_TOKEN")
-
-	bot, err := tgbotapi.NewBotAPI(token)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	bot.Debug = true
-
-	log.Printf("Authorized on account %s", bot.Self.UserName)
-
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
-
-	// Для получения через long pooling. Включить для локального запуска
-	// updates, err := bot.GetUpdatesChan(u)
-	// Для получения через webhook. Включить для деплоя на heroku
-	updates := bot.ListenForWebhook("/" + bot.Token)
-	http.HandleFunc("/", MainHandler)
-	go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
-
+func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 	for update := range updates {
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
@@ -43,6 +17,20 @@ func main() {
 		reply := "Не знаю, что сказать🧐Попробуй написать /help, чтобы узнать, что я могу"
 		if update.Message.Text == "" {
 			reply = "Используй только текст☝️"
+		}
+
+		if strings.Contains(update.Message.Text, "сейчас") {
+			locality := strings.Fields(update.Message.Text)
+			fmt.Println(locality)
+			weather, err := api.GetWeatherNow(locality[0])
+			reply = "Погода на сегодня " + weather
+			if err != nil {
+				return err
+			}
+		}
+
+		if strings.Contains(update.Message.Text, "завтра") {
+
 		}
 
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
@@ -57,11 +45,12 @@ func main() {
 		case "help":
 			reply = "Я могу показать погоду из сервиса \"OpenWeatherMap\" " + "в твоём городе. " +
 				"Для этого используй команды на клавиатуре или введи команду следующим образом:\n" +
+				"	• Можайск сейчас\n" +
 				"	• Москва сегодня\n" +
 				"	• Дубна завтра\n" +
 				"	• Петербург 4 дня\n" +
 				"	• Териберка неделя\n" +
-				"Прогноз погоды можно узнать на сегодня и завтра с ежечасным прогнозом или на период вплоть до 7 дней " +
+				"Прогноз погоды можно узнать на данный момент, на сегодня и завтра с ежечасным прогнозом или на период вплоть до 7 дней " +
 				"с ежедневным прогнозом. Прогноз на сегодня также покажет состояние погоды на текущий момент.\n" +
 				"Также, я могу сделать автоматически присылать уведомления о погоде. Для этого введи команду так:\n" +
 				"	• уведомление 12:00\n" +
@@ -82,6 +71,10 @@ func main() {
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, reply)
 		msg.ReplyToMessageID = update.Message.MessageID
 
-		bot.Send(msg)
+		_, err := bot.Send(msg)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
+	return nil
 }
