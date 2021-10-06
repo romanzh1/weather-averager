@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,13 +18,13 @@ func MainHandler(resp http.ResponseWriter, _ *http.Request) {
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Panic(err)
+		log.Fatalln(err)
 	}
 	token := os.Getenv("BOT_TOKEN")
 
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		log.Panic(err)
+		log.Fatalln(err) //TODO use zap for error handling
 	}
 
 	bot.Debug = true
@@ -33,18 +34,19 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
+	//TODO add environment variable for automatic switching
 	// Для получения через long pooling. Включить для локального запуска
-	updates, err := bot.GetUpdatesChan(u)
+	// updates, err := bot.GetUpdatesChan(u)
 	// Для получения через webhook. Включить для деплоя на heroku
-	// updates, err := bot.ListenForWebhook("/" + bot.Token)
-	// http.HandleFunc("/", MainHandler)
-	// go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	updates := bot.ListenForWebhook("/" + bot.Token)
+	http.HandleFunc("/", MainHandler)
+	go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
-		log.Panic(err)
+		fmt.Println(err)
 	}
 
 	err = message.SendResponse(updates, bot)
 	if err != nil {
-		log.Panic(err)
+		fmt.Println(err)
 	}
 }
