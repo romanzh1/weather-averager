@@ -18,7 +18,7 @@ func MainHandler(resp http.ResponseWriter, _ *http.Request) {
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err) // TODO change
 	}
 	token := os.Getenv("BOT_TOKEN")
 
