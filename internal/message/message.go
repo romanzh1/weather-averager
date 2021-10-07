@@ -40,19 +40,50 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 			if err != nil {
 				fmt.Println(err)
 			}
+			fmt.Println("\n\n\n\n\n\n\n\n\n\nn")
+
 			reply = "Погода на 12 часов: " //TODO add a response with a proposal to send a weather forecast for another 12 hours
 
 			for i := 0; i < 12; i++ {
-				reply += fmt.Sprintf("\n\n%s %.1f° градусов, ощущается как %.1f. Влажность %d%s.\nСкорость ветра %.1f м/с, %s⛅",
+				reply += fmt.Sprintf("\n\n%s %.1f° градусов, ощущается как %.1f. Влажность %d%s.\nСкорость ветра %.1f м/с, %s⛅Вероятность осадков %.1f%s",
 					time.Unix(dataWeather.Hourly[i].Dt, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
-					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description)
+					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description, dataWeather.Hourly[i].Pop*100, percent)
 			}
 			if err != nil {
 				fmt.Println(err)
 			}
 		}
 
-		if strings.Contains(update.Message.Text, "на") {
+		if strings.Contains(update.Message.Text, "завтра") {
+			message := strings.Fields(update.Message.Text)
+			dataWeather, err := api.GetWeatherByHour(message[0]) // TODO send weather emoji
+			if err != nil {
+				fmt.Println(err)
+			}
+			reply = "Погода на 12 часов завтра: " //TODO add a response with a proposal to send a weather forecast for another 12 hours
+
+			tomorrow := time.Now().AddDate(0, 0, 1)
+			var dateLayout = "02-01-2006"
+			midnight, _ := time.Parse(dateLayout, tomorrow.Format(dateLayout))
+			midnightUnix := (midnight.Add(-3 * time.Hour)).Unix()
+			var indTomor int
+			for i := 0; i < 48; i++ {
+				if dataWeather.Hourly[i].Dt == midnightUnix {
+					indTomor = i
+				}
+			}
+
+			for i := indTomor; i < indTomor+12; i++ {
+				reply += fmt.Sprintf("\n\n%s %.1f° градусов, ощущается как %.1f. Влажность %d%s.\nСкорость ветра %.1f м/с, %s⛅Вероятность осадков %.1f%s",
+					time.Unix(dataWeather.Hourly[i].Dt, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
+					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description, dataWeather.Hourly[i].Pop*100, percent)
+			}
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+
+		if strings.Contains(update.Message.Text, " на ") {
 			message := strings.Fields(update.Message.Text)
 			dataWeather, err := api.GetWeatherByHour(message[0]) // TODO send weather emoji
 			if err != nil {
@@ -65,9 +96,55 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 			reply = fmt.Sprintf("Погода на %d часов", numberHours)
 
 			for i := 0; i < numberHours; i++ {
-				reply += fmt.Sprintf("\n\n%s %.1f° градусов, ощущается как %.1f. Влажность %d%s.\nСкорость ветра %.1f м/с, %s⛅",
+				reply += fmt.Sprintf("\n\n%s %.1f° градусов, ощущается как %.1f. Влажность %d%s.\nСкорость ветра %.1f м/с, %s⛅Вероятность осадков %.1f%s",
 					time.Unix(dataWeather.Hourly[i].Dt, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
-					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description)
+					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description, dataWeather.Hourly[i].Pop*100, percent)
+			}
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+
+		if strings.Contains(update.Message.Text, " дня") || strings.Contains(update.Message.Text, " дней") || strings.Contains(update.Message.Text, " день") {
+			message := strings.Fields(update.Message.Text)
+			dataWeather, err := api.GetWeatherByHour(message[0]) // TODO send weather emoji
+			if err != nil {
+				fmt.Println(err)
+			}
+			reply = "Погода на " + message[1] + " дня:" //TODO add a response with a proposal to send a weather forecast for another 12 hours
+			numDays, err := strconv.Atoi(message[1])
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			for i := 0; i < numDays; i++ {
+				reply += fmt.Sprintf("\n\n%s Фактическая: утром %.1f°, днём %.1f, вечером %.1f, ночью %.1f"+
+					"\nПо ощущениям: утром %.1f°, днём %.1f, вечером %.1f, ночью %.1f."+
+					"\nВлажность %d%s.\nСкорость ветра %.1f м/с, %s⛅ Вероятность осадков %.0f%s",
+					time.Unix(dataWeather.Daily[i].Dt, 0).Format("15:04"), dataWeather.Daily[i].Temp.Morn, dataWeather.Daily[i].Temp.Day, dataWeather.Daily[i].Temp.Eve, dataWeather.Daily[i].Temp.Night,
+					dataWeather.Daily[i].FeelsLike.Morn, dataWeather.Daily[i].FeelsLike.Day, dataWeather.Daily[i].FeelsLike.Eve, dataWeather.Daily[i].FeelsLike.Night, dataWeather.Daily[i].Humidity,
+					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description, dataWeather.Hourly[i].Pop*100, percent)
+			}
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+
+		if strings.Contains(update.Message.Text, "неделя") {
+			message := strings.Fields(update.Message.Text)
+			dataWeather, err := api.GetWeatherByHour(message[0]) // TODO send weather emoji
+			if err != nil {
+				fmt.Println(err)
+			}
+			reply = "Погода на неделю: " //TODO add a response with a proposal to send a weather forecast for another 12 hours
+
+			for i := 0; i < len(dataWeather.Daily); i++ {
+				reply += fmt.Sprintf("\n\n%s Фактическая: утром %.1f°, днём %.1f, вечером %.1f, ночью %.1f"+
+					"\nПо ощущениям: утром %.1f°, днём %.1f, вечером %.1f, ночью %.1f."+
+					"\nВлажность %d%s.\nСкорость ветра %.1f м/с, %s⛅ Вероятность осадков %.0f%s",
+					time.Unix(dataWeather.Daily[i].Dt, 0).Format("15:04"), dataWeather.Daily[i].Temp.Morn, dataWeather.Daily[i].Temp.Day, dataWeather.Daily[i].Temp.Eve, dataWeather.Daily[i].Temp.Night,
+					dataWeather.Daily[i].FeelsLike.Morn, dataWeather.Daily[i].FeelsLike.Day, dataWeather.Daily[i].FeelsLike.Eve, dataWeather.Daily[i].FeelsLike.Night, dataWeather.Daily[i].Humidity,
+					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description, dataWeather.Hourly[i].Pop*100, percent)
 			}
 			if err != nil {
 				fmt.Println(err)
