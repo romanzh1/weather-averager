@@ -1,1 +1,1 @@
-web: bin/weather-averager/cmd/open-weather-map
+web: bin/weather-averager
