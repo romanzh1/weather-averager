@@ -27,13 +27,6 @@ func main() {
 		log.Fatalln(err) //TODO use zap for error handling
 	}
 
-	// today := time.Now()
-	// tomorrow := today.AddDate(0, 0, 1)
-	// fmt.Printf("Today    : %02d-%02d-%04d-%d\n", today.Day(), today.Month(), today.Year(), today.Hour())
-	// fmt.Println("Tomorrow : %02d-%02d-%04d-%d", tomorrow.Day(), tomorrow.Month(), tomorrow.Year(), today.Hour())
-
-	// var first_january = "07/10/2021 19:00"
-
 	bot.Debug = true
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
