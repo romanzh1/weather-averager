@@ -35,18 +35,27 @@ func main() {
 	u.Timeout = 60
 
 	//TODO add environment variable for automatic switching
-	var updates tgbotapi.UpdatesChannel
+	// var updates tgbotapi.UpdatesChannel
+	// if os.Getenv("PORT") == "" {
+	// 	// long pooling (local)
+	// 	updates, err = bot.GetUpdatesChan(u)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// } else {
+	// 	// getting through a webhook (deployment to heroku)
+
+	// }
+	updates := bot.ListenForWebhook("/" + bot.Token)
+	http.HandleFunc("/", MainHandler)
+	go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	if os.Getenv("PORT") == "" {
 		// long pooling (local)
 		updates, err = bot.GetUpdatesChan(u)
-		if err != nil {
-			fmt.Println(err)
-		}
-	} else {
-		// getting through a webhook (deployment to heroku)
-		updates = bot.ListenForWebhook("/" + bot.Token)
-		http.HandleFunc("/", MainHandler)
-		go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 		if err != nil {
 			fmt.Println(err)
 		}
