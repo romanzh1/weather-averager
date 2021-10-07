@@ -1,6 +1,7 @@
 package api
 
 import (
+	"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -23,7 +24,14 @@ func GetCoordLocality(locality string) (Coordinates, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	resp, err := (&http.Client{}).Do(req)
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true, // TODO write to GeoTree that the certificate is not valid
+			},
+		},
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -18,13 +18,13 @@ func MainHandler(resp http.ResponseWriter, _ *http.Request) {
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		fmt.Println(err) // TODO change
+		fmt.Println(err) // TODO on heroku crashes if put a fatal shutdown
 	}
 	token := os.Getenv("BOT_TOKEN")
 
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		log.Fatalln(err) //TODO use zap for error handling
+		log.Fatalln(err)
 	}
 
 	bot.Debug = true
@@ -34,24 +34,12 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	//TODO add environment variable for automatic switching
-	// var updates tgbotapi.UpdatesChannel
-	// if os.Getenv("PORT") == "" {
-	// 	// long pooling (local)
-	// 	updates, err = bot.GetUpdatesChan(u)
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// } else {
-	// 	// getting through a webhook (deployment to heroku)
-
-	// }
 	updates := bot.ListenForWebhook("/" + bot.Token)
 	http.HandleFunc("/", MainHandler)
 	go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 
 	if os.Getenv("PORT") == "" {
-		// long pooling (local)
+		// long pooling (local) 	//TODO change environment variable for automatic switching
 		updates, err = bot.GetUpdatesChan(u)
 		if err != nil {
 			fmt.Println(err)

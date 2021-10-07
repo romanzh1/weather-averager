@@ -13,7 +13,9 @@ import (
 func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 	percent := "%"
 	var err error
-
+	// TODO optimize the number of if constructs and create methods for repeated code
+	// TODO add notification functionality
+	// TODO message design (clouds, amount of information)
 	for update := range updates {
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
@@ -40,7 +42,6 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 			if err != nil {
 				fmt.Println(err)
 			}
-			fmt.Println("\n\n\n\n\n\n\n\n\n\nn")
 
 			reply = "Погода на 12 часов: " //TODO add a response with a proposal to send a weather forecast for another 12 hours
 
@@ -111,7 +112,7 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 			if err != nil {
 				fmt.Println(err)
 			}
-			reply = "Погода на " + message[1] + " дня:" //TODO add a response with a proposal to send a weather forecast for another 12 hours
+			reply = "Погода на " + message[1] + " дня:"
 			numDays, err := strconv.Atoi(message[1])
 			if err != nil {
 				fmt.Println(err)
@@ -136,7 +137,7 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 			if err != nil {
 				fmt.Println(err)
 			}
-			reply = "Погода на неделю: " //TODO add a response with a proposal to send a weather forecast for another 12 hours
+			reply = "Погода на неделю: "
 
 			for i := 0; i < len(dataWeather.Daily); i++ {
 				reply += fmt.Sprintf("\n\n%s Фактическая: утром %.1f°, днём %.1f, вечером %.1f, ночью %.1f"+
