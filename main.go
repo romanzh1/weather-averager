@@ -49,9 +49,6 @@ func main() {
 	updates := bot.ListenForWebhook("/" + bot.Token)
 	http.HandleFunc("/", MainHandler)
 	go http.ListenAndServe(":"+os.Getenv("PORT"), nil)
-	if err != nil {
-		fmt.Println(err)
-	}
 
 	if os.Getenv("PORT") == "" {
 		// long pooling (local)
