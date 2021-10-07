@@ -47,7 +47,7 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 
 			for i := 0; i < 12; i++ {
 				reply += fmt.Sprintf("\n\n%s %.1f° градусов, ощущается как %.1f. Влажность %d%s.\nСкорость ветра %.1f м/с, %s⛅Вероятность осадков %.1f%s",
-					time.Unix(dataWeather.Hourly[i].Dt, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
+					time.Unix(dataWeather.Hourly[i].Dt+10800, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
 					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description, dataWeather.Hourly[i].Pop*100, percent)
 			}
 			if err != nil {
@@ -66,7 +66,7 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 			tomorrow := time.Now().AddDate(0, 0, 1)
 			var dateLayout = "02-01-2006"
 			midnight, _ := time.Parse(dateLayout, tomorrow.Format(dateLayout))
-			midnightUnix := (midnight.Add(-3 * time.Hour)).Unix()
+			midnightUnix := midnight.Unix() // TODO make time zone
 			var indTomor int
 			for i := 0; i < 48; i++ {
 				if dataWeather.Hourly[i].Dt == midnightUnix {
@@ -98,7 +98,7 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 
 			for i := 0; i < numberHours; i++ {
 				reply += fmt.Sprintf("\n\n%s %.1f° градусов, ощущается как %.1f. Влажность %d%s.\nСкорость ветра %.1f м/с, %s⛅Вероятность осадков %.1f%s",
-					time.Unix(dataWeather.Hourly[i].Dt, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
+					time.Unix(dataWeather.Hourly[i].Dt+10800, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
 					percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Weather[0].Description, dataWeather.Hourly[i].Pop*100, percent)
 			}
 			if err != nil {
