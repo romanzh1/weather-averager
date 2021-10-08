@@ -46,11 +46,11 @@ func GetCoordLocality(locality string) (Coordinates, error) {
 	coordStr := strings.Split(strings.Split(strings.Split(string(body), `"geo_inside": {`)[1], `},`)[0], ",")
 	re := regexp.MustCompile(`[0-9]+|\.`)
 
-	coordinates.Lat, err = strconv.ParseFloat(strings.Join(re.FindAllString(coordStr[0], -1), ""), 64)
+	coordinates.Lon, err = strconv.ParseFloat(strings.Join(re.FindAllString(coordStr[0], -1), ""), 64)
 	if err != nil {
 		fmt.Println(err)
 	}
-	coordinates.Lon, err = strconv.ParseFloat(strings.Join(re.FindAllString(coordStr[1], -1), ""), 64)
+	coordinates.Lat, err = strconv.ParseFloat(strings.Join(re.FindAllString(coordStr[1], -1), ""), 64)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -1,3 +1,5 @@
-all: run
+all: build run
+build:
+	go build -o main.exe .
 run:
-	go run ./cmd/open-weather-map/main.go
+	main.exe
