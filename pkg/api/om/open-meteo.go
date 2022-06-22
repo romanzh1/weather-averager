@@ -19,7 +19,7 @@ type Weather struct {
 		Weathercode         []int     `json:"weathercode"`
 		ApparentTemperature []float64 `json:"apparent_temperature"`
 	} `json:"hourly"`
-	Daily            struct {
+	Daily struct {
 		Weathercode            []int     `json:"weathercode"`
 		Windspeed10MMax        []float64 `json:"windspeed_10m_max"`
 		Temperature2MMax       []float64 `json:"temperature_2m_max"`
@@ -34,9 +34,9 @@ type Weather struct {
 func GetCurrentDateAndHour(dataWeather *Weather) int {
 	nowHour := time.Now().String()[11:13]
 	nowDate := time.Now().String()[:10]
-	
-	for i, el := range dataWeather.Hourly.Time{
-		if nowHour == el[11:13] && nowDate == el[:10]{
+
+	for i, el := range dataWeather.Hourly.Time {
+		if nowHour == el[11:13] && nowDate == el[:10] {
 			return i
 		}
 	}
@@ -46,8 +46,8 @@ func GetCurrentDateAndHour(dataWeather *Weather) int {
 func GetTomorrowDateAndHour(dataWeather *Weather) int {
 	midnight := time.Now().AddDate(0, 0, 1).String()[:10]
 
-	for i, el := range dataWeather.Hourly.Time{
-		if midnight == el[:10]{
+	for i, el := range dataWeather.Hourly.Time {
+		if midnight == el[:10] {
 			return i
 		}
 	}
@@ -101,7 +101,7 @@ func GetWeatherByDay(locality string) (*Weather, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 	return dataWeather, err
 }
 
@@ -116,6 +116,6 @@ func getWeather(addressAPI string) (*Weather, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return dataWeather, err
 }

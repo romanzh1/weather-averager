@@ -36,12 +36,12 @@ func getWeatherAverage(message string) string {
 		for i := 0; i < 12; i++ {
 			j := iHour + i
 			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %.0f%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
-				dataWeatherTOM.Data.Timelines[0].Intervals[i].StartTime.String()[11:16], 
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.Temperature + dataWeatherOM.Hourly.Temperature2M[j] + dataWeatherOWM.Hourly[i].Temp)/3, 
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.TemperatureApparent + dataWeatherOM.Hourly.ApparentTemperature[j] + dataWeatherOWM.Hourly[i].FeelsLike)/3,
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.Humidity + float64(dataWeatherOM.Hourly.Relativehumidity2M[j] + dataWeatherOWM.Hourly[i].Humidity))/3, percent, 
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.WindSpeed + dataWeatherOM.Hourly.Windspeed10M[j]+ dataWeatherOWM.Hourly[i].WindSpeed)/3,
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.CloudCover + float64(dataWeatherOM.Hourly.Cloudcover[j]) + float64(dataWeatherOWM.Hourly[i].Pop*100))/3, percent, 
+				dataWeatherTOM.Data.Timelines[0].Intervals[i].StartTime.String()[11:16],
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.Temperature+dataWeatherOM.Hourly.Temperature2M[j]+dataWeatherOWM.Hourly[i].Temp)/3,
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.TemperatureApparent+dataWeatherOM.Hourly.ApparentTemperature[j]+dataWeatherOWM.Hourly[i].FeelsLike)/3,
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.Humidity+float64(dataWeatherOM.Hourly.Relativehumidity2M[j]+dataWeatherOWM.Hourly[i].Humidity))/3, percent,
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.WindSpeed+dataWeatherOM.Hourly.Windspeed10M[j]+dataWeatherOWM.Hourly[i].WindSpeed)/3,
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.CloudCover+float64(dataWeatherOM.Hourly.Cloudcover[j])+float64(dataWeatherOWM.Hourly[i].Pop*100))/3, percent,
 				getWeatherOMCondition(dataWeatherOM.Hourly.Weathercode[j]))
 		}
 		if err != nil {
@@ -78,12 +78,12 @@ func getWeatherAverage(message string) string {
 		for i := 0; i < numberHours; i++ {
 			j := iHour + i
 			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %.0f%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
-				dataWeatherTOM.Data.Timelines[0].Intervals[i].StartTime.String()[11:16], 
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.Temperature + dataWeatherOM.Hourly.Temperature2M[j] + dataWeatherOWM.Hourly[i].Temp)/3, 
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.TemperatureApparent + dataWeatherOM.Hourly.ApparentTemperature[j] + dataWeatherOWM.Hourly[i].FeelsLike)/3,
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.Humidity + float64(dataWeatherOM.Hourly.Relativehumidity2M[j] + dataWeatherOWM.Hourly[i].Humidity))/3, percent, 
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.WindSpeed + dataWeatherOM.Hourly.Windspeed10M[j]+ dataWeatherOWM.Hourly[i].WindSpeed)/3,
-				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.CloudCover + float64(dataWeatherOM.Hourly.Cloudcover[j]) + float64(dataWeatherOWM.Hourly[i].Pop*100))/3, percent, 
+				dataWeatherTOM.Data.Timelines[0].Intervals[i].StartTime.String()[11:16],
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.Temperature+dataWeatherOM.Hourly.Temperature2M[j]+dataWeatherOWM.Hourly[i].Temp)/3,
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.TemperatureApparent+dataWeatherOM.Hourly.ApparentTemperature[j]+dataWeatherOWM.Hourly[i].FeelsLike)/3,
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.Humidity+float64(dataWeatherOM.Hourly.Relativehumidity2M[j]+dataWeatherOWM.Hourly[i].Humidity))/3, percent,
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.WindSpeed+dataWeatherOM.Hourly.Windspeed10M[j]+dataWeatherOWM.Hourly[i].WindSpeed)/3,
+				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.CloudCover+float64(dataWeatherOM.Hourly.Cloudcover[j])+float64(dataWeatherOWM.Hourly[i].Pop*100))/3, percent,
 				getWeatherOMCondition(dataWeatherOM.Hourly.Weathercode[j]))
 		}
 

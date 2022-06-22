@@ -17,12 +17,12 @@ type Weather struct {
 			Intervals []struct {
 				StartTime time.Time `json:"startTime"`
 				Values    struct {
-					CloudCover          float64     `json:"cloudCover"`
-					Humidity            float64     `json:"humidity"`
+					CloudCover          float64 `json:"cloudCover"`
+					Humidity            float64 `json:"humidity"`
 					Temperature         float64 `json:"temperature"`
 					TemperatureApparent float64 `json:"temperatureApparent"`
 					WeatherCode         int     `json:"weatherCode"`
-					WindSpeed           float64     `json:"windSpeed"`
+					WindSpeed           float64 `json:"windSpeed"`
 				} `json:"values"`
 			} `json:"intervals"`
 		} `json:"timelines"`
@@ -33,8 +33,8 @@ func GetTomorrowDateAndHour(dataWeather *Weather) int {
 	tomorrow := time.Now().AddDate(0, 0, 1).String()
 	midnightStr := strings.Split(tomorrow, " ")[0] + "T00:00:00Z"
 
-	for i, el := range dataWeather.Data.Timelines[0].Intervals{
-		if midnightStr == convertTimeToTimestampz(el.StartTime){
+	for i, el := range dataWeather.Data.Timelines[0].Intervals {
+		if midnightStr == convertTimeToTimestampz(el.StartTime) {
 			return i
 		}
 	}
@@ -56,7 +56,7 @@ func GetWeatherNow(locality string) (*Weather, error) {
 	endTime := startTime.Add(time.Hour)
 	addressAPI := fmt.Sprintf("https://api.tomorrow.io/v4/timelines?location=%f,%f&fields=temperature,temperatureApparent,cloudCover,windSpeed,humidity,weatherCode&startTime=%s&endTime=%s&timesteps=current&units=metric&timezone=UTC&apikey=%s",
 		coordinates.Lat, coordinates.Lon, convertTimeToTimestampz(startTime), convertTimeToTimestampz(endTime), os.Getenv("TOMORROW_TOKEN"))
-	
+
 	dataWeather, err := getWeather(addressAPI)
 	if err != nil {
 		fmt.Println(err)
@@ -99,7 +99,7 @@ func GetWeatherByDay(locality string, countDay int) (*Weather, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 	return dataWeather, err
 }
 
@@ -114,6 +114,6 @@ func getWeather(addressAPI string) (*Weather, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return dataWeather, err
 }

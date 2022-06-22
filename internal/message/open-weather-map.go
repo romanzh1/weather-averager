@@ -34,8 +34,8 @@ func getWeatherOWM(message string) string {
 		reply = "Погода на 12 часов: " //TODO add a response with a proposal to send a weather forecast for another 12 hours
 
 		for i := 0; i < 12; i++ {
-			reply += fmt.Sprintf("\n\n%s %.1f° градусов, ощущается как %.1f°. Влажность %d%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
-				time.Unix(dataWeather.Hourly[i].Dt+10800, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
+			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %d%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
+				time.Unix(dataWeather.Hourly[i].Dt, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
 				percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Pop*100, percent, getWeatherOWMCondition(dataWeather.Hourly[i].Weather[0].Description))
 		}
 		if err != nil {
@@ -67,7 +67,7 @@ func getWeatherOWM(message string) string {
 
 		for i := indTomor; i < indTomor+16; i++ {
 			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %d%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
-				time.Unix(dataWeather.Hourly[i].Dt, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
+				time.Unix(dataWeather.Hourly[i].Dt-10800, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
 				percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Pop*100, percent, getWeatherOWMCondition(dataWeather.Hourly[i].Weather[0].Description))
 		}
 		if err != nil {
@@ -91,7 +91,7 @@ func getWeatherOWM(message string) string {
 
 		for i := 0; i < numberHours; i++ {
 			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %d%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
-				time.Unix(dataWeather.Hourly[i].Dt+10800, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
+				time.Unix(dataWeather.Hourly[i].Dt, 0).Format("15:04"), dataWeather.Hourly[i].Temp, dataWeather.Hourly[i].FeelsLike, dataWeather.Hourly[i].Humidity,
 				percent, dataWeather.Hourly[i].WindSpeed, dataWeather.Hourly[i].Pop*100, percent, getWeatherOWMCondition(dataWeather.Hourly[i].Weather[0].Description))
 		}
 		if err != nil {
