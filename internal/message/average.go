@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/romanzh1/weather-averager/pkg/api/om"
 	"github.com/romanzh1/weather-averager/pkg/api/owm"
@@ -15,20 +16,43 @@ func getWeatherAverage(message string) string {
 	reply := ""
 
 	if strings.Contains(message, "сегодня") {
-		message := strings.Fields(message)
+		message := strings.Fields(message)[0]
 
-		dataWeatherTOM, err := tom.GetWeatherByHour(message[0], 12) //TODO add go routine
-		if err != nil {
-			fmt.Println(err)
+		var errW error
+		var dataWeatherTOM *tom.Weather
+		var dataWeatherOM *om.Weather
+		var dataWeatherOWM *owm.WeatherTwoDays
+
+		var wg sync.WaitGroup
+		wg.Add(3)
+		tomSource := func(message string, hour int) {
+			defer wg.Done()
+			dataWeatherTOM, errW = tom.GetWeatherByHour(message, hour)
+			if errW != nil {
+				fmt.Println(errW)
+			}
 		}
-		dataWeatherOM, err := om.GetWeatherByHour(message[0])
-		if err != nil {
-			fmt.Println(err)
+		omSource := func(message string) {
+			defer wg.Done()
+			dataWeatherOM, errW = om.GetWeatherByHour(message)
+			if errW != nil {
+				fmt.Println(errW)
+			}
 		}
-		dataWeatherOWM, err := owm.GetWeatherByHour(message[0])
-		if err != nil {
-			fmt.Println(err)
+		owmSource := func(message string) {
+			defer wg.Done()
+			dataWeatherOWM, errW = owm.GetWeatherByHour(message)
+			if errW != nil {
+				fmt.Println(errW)
+			}
 		}
+
+		go tomSource(message, 12)
+		go omSource(message)
+		go owmSource(message)
+
+		wg.Wait()
+
 		iHour := om.GetCurrentDateAndHour(dataWeatherOM)
 
 		reply = "Усреднённая погода на 12 часов из всех источников: "
@@ -43,9 +67,6 @@ func getWeatherAverage(message string) string {
 				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.WindSpeed+dataWeatherOM.Hourly.Windspeed10M[j]+dataWeatherOWM.Hourly[i].WindSpeed)/3,
 				(dataWeatherTOM.Data.Timelines[0].Intervals[i].Values.CloudCover+float64(dataWeatherOM.Hourly.Cloudcover[j])+float64(dataWeatherOWM.Hourly[i].Pop*100))/3, percent,
 				getWeatherOMCondition(dataWeatherOM.Hourly.Weathercode[j]))
-		}
-		if err != nil {
-			fmt.Println(err)
 		}
 
 		return reply
