@@ -8,7 +8,7 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/joho/godotenv"
-	"github.com/romanzh1/weather-averager/internal/message"
+	"github.com/romanzh1/weather-averager/internal/response"
 )
 
 func MainHandler(resp http.ResponseWriter, _ *http.Request) {
@@ -46,7 +46,7 @@ func main() {
 		}
 	}
 
-	err = message.SendResponse(updates, bot)
+	err = response.SendResponse(updates, bot)
 	if err != nil {
 		fmt.Println(err)
 	}

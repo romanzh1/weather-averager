@@ -6,5 +6,5 @@ import (
 )
 
 func BenchmarkGetWeatherAverage(b *testing.B) {
-	fmt.Println(getWeatherAverage("дубна сегодня ave"))
+	fmt.Println(GetWeatherAverage("дубна сегодня ave"))
 }

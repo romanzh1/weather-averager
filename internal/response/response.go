@@ -1,8 +1,10 @@
-package message
+package response
 
 import (
 	"fmt"
 	"strings"
+
+	"github.com/romanzh1/weather-averager/internal/response/message"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
@@ -16,24 +18,24 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
 		}
-		message := update.Message.Text
+		userMessage := update.Message.Text
 		reply := "Не знаю, что сказать🧐Попробуй написать /help, чтобы узнать, что я могу"
-		if message == "" {
-			reply = "Используй только текст☝️"
+		if userMessage == "" {
+			reply = "Напиши что-нибудь☝️"
 		}
 
-		if !strings.Contains(message, "om") && !strings.Contains(message, "tom") {
-			reply = getWeatherOWM(message)
+		if !strings.Contains(userMessage, "om") && !strings.Contains(userMessage, "tom") {
+			reply = message.GetWeatherOWM(userMessage)
 		}
 
-		if strings.Contains(message, "tom") {
-			reply = getWeatherTOM(message)
-		} else if strings.Contains(message, "om") {
-			reply = getWeatherOM(message)
+		if strings.Contains(userMessage, "tom") {
+			reply = message.GetWeatherTOM(userMessage)
+		} else if strings.Contains(userMessage, "om") {
+			reply = message.GetWeatherOM(userMessage)
 		}
 
-		if strings.Contains(message, "ave") {
-			reply = getWeatherAverage(message)
+		if strings.Contains(userMessage, "ave") {
+			reply = message.GetWeatherAverage(userMessage)
 		}
 		// log.Printf("[%s] %s", update.Message.From.UserName, message)
 
@@ -65,7 +67,7 @@ func SendResponse(updates tgbotapi.UpdatesChannel, bot *tgbotapi.BotAPI) error {
 
 		}
 
-		switch message {
+		switch userMessage {
 		case "Привет":
 			reply = "Привет🖐. Я телеграм-бот, усредняющий погоду из различных популярных " +
 				"сервисов погоды, на данный момент могу показать погоду только из одного.\n" +

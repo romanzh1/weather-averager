@@ -12,22 +12,22 @@ import (
 type Weather struct {
 	Hourly struct {
 		Time                []string  `json:"time"`
-		Relativehumidity2M  []int     `json:"relativehumidity_2m"`
-		Windspeed10M        []float64 `json:"windspeed_10m"`
-		Cloudcover          []int     `json:"cloudcover"`
-		Temperature2M       []float64 `json:"temperature_2m"`
-		Weathercode         []int     `json:"weathercode"`
-		ApparentTemperature []float64 `json:"apparent_temperature"`
+		Relativehumidity2M  []float32 `json:"relativehumidity_2m"`
+		Windspeed10M        []float32 `json:"windspeed_10m"`
+		Cloudcover          []float32 `json:"cloudcover"`
+		Temperature2M       []float32 `json:"temperature_2m"`
+		Weathercode         []float32 `json:"weathercode"`
+		ApparentTemperature []float32 `json:"apparent_temperature"`
 	} `json:"hourly"`
 	Daily struct {
-		Weathercode            []int     `json:"weathercode"`
-		Windspeed10MMax        []float64 `json:"windspeed_10m_max"`
-		Temperature2MMax       []float64 `json:"temperature_2m_max"`
+		Weathercode            []float32 `json:"weathercode"`
+		Windspeed10MMax        []float32 `json:"windspeed_10m_max"`
+		Temperature2MMax       []float32 `json:"temperature_2m_max"`
 		Time                   []string  `json:"time"`
-		ApparentTemperatureMax []float64 `json:"apparent_temperature_max"`
-		PrecipitationSum       []float64 `json:"precipitation_sum"`
-		Temperature2MMin       []float64 `json:"temperature_2m_min"`
-		ApparentTemperatureMin []float64 `json:"apparent_temperature_min"`
+		ApparentTemperatureMax []float32 `json:"apparent_temperature_max"`
+		PrecipitationSum       []float32 `json:"precipitation_sum"`
+		Temperature2MMin       []float32 `json:"temperature_2m_min"`
+		ApparentTemperatureMin []float32 `json:"apparent_temperature_min"`
 	} `json:"daily"`
 }
 

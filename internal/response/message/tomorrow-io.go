@@ -9,7 +9,7 @@ import (
 	"github.com/romanzh1/weather-averager/pkg/api/tom"
 )
 
-func getWeatherTOM(message string) string {
+func GetWeatherTOM(message string) string {
 	percent := "%"
 	reply := ""
 
@@ -158,7 +158,7 @@ func getWeatherTOM(message string) string {
 		return reply
 	}
 
-	return "Не корректно введены данные для прогнозирования"
+	return invalidRequest
 }
 
 func getWeatherTOMCondition(code int) string { // TODO add condition cases

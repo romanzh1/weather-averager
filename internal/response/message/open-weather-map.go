@@ -9,7 +9,7 @@ import (
 	"github.com/romanzh1/weather-averager/pkg/api/owm"
 )
 
-func getWeatherOWM(message string) string {
+func GetWeatherOWM(message string) string {
 	percent := "%"
 	reply := ""
 
@@ -152,7 +152,7 @@ func getWeatherOWM(message string) string {
 		return reply
 	}
 
-	return "Не корректно введены данные для прогнозирования"
+	return invalidRequest
 }
 
 func getWeatherOWMCondition(condition string) string {

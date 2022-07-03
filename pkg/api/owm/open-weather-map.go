@@ -21,10 +21,10 @@ type Weather []struct {
 type WeatherNow struct {
 	Main struct {
 		Dt        int64   `json:"dt"`
-		Temp      float64 `json:"temp"`
-		FeelsLike float64 `json:"feels_like"`
-		TempMin   float64 `json:"temp_min"`
-		TempMax   float64 `json:"temp_max"`
+		Temp      float32 `json:"temp"`
+		FeelsLike float32 `json:"feels_like"`
+		TempMin   float32 `json:"temp_min"`
+		TempMax   float32 `json:"temp_max"`
 		Pressure  int     `json:"pressure"`
 		Humidity  int     `json:"humidity"`
 	} `json:"main"`
@@ -32,7 +32,7 @@ type WeatherNow struct {
 
 	Visibility int `json:"visibility"`
 	Wind       struct {
-		Speed float64 `json:"speed"`
+		Speed float32 `json:"speed"`
 	} `json:"wind"`
 	Cod int `json:"cod"`
 }
@@ -40,12 +40,12 @@ type WeatherNow struct {
 type WeatherTwoDays struct {
 	Hourly []struct {
 		Dt         int64   `json:"dt"`
-		Temp       float64 `json:"temp"`
-		FeelsLike  float64 `json:"feels_like"`
+		Temp       float32 `json:"temp"`
+		FeelsLike  float32 `json:"feels_like"`
 		Pressure   int     `json:"pressure"`
 		Humidity   int     `json:"humidity"`
 		Visibility int     `json:"visibility"`
-		WindSpeed  float64 `json:"wind_speed"`
+		WindSpeed  float32 `json:"wind_speed"`
 		Pop        float32 `json:"pop"`
 		Weather
 	} `json:"hourly"`
@@ -56,29 +56,29 @@ type WeatherTwoDays struct {
 		Sunset    int64   `json:"sunset"`
 		Moonrise  int64   `json:"moonrise"`
 		Moonset   int64   `json:"moonset"`
-		MoonPhase float64 `json:"moon_phase"`
+		MoonPhase float32 `json:"moon_phase"`
 		Temp      struct {
-			Day   float64 `json:"day"`
-			Min   float64 `json:"min"`
-			Max   float64 `json:"max"`
-			Night float64 `json:"night"`
-			Eve   float64 `json:"eve"`
-			Morn  float64 `json:"morn"`
+			Day   float32 `json:"day"`
+			Min   float32 `json:"min"`
+			Max   float32 `json:"max"`
+			Night float32 `json:"night"`
+			Eve   float32 `json:"eve"`
+			Morn  float32 `json:"morn"`
 		} `json:"temp"`
 		FeelsLike struct {
-			Day   float64 `json:"day"`
-			Night float64 `json:"night"`
-			Eve   float64 `json:"eve"`
-			Morn  float64 `json:"morn"`
+			Day   float32 `json:"day"`
+			Night float32 `json:"night"`
+			Eve   float32 `json:"eve"`
+			Morn  float32 `json:"morn"`
 		} `json:"feels_like"`
 		Pressure  int     `json:"pressure"`
 		Humidity  int     `json:"humidity"`
-		WindSpeed float64 `json:"wind_speed"`
+		WindSpeed float32 `json:"wind_speed"`
 		Weather
 		Clouds int     `json:"clouds"`
 		Pop    float32 `json:"pop"`
-		Uvi    float64 `json:"uvi"`
-		Rain   float64 `json:"rain,omitempty"`
+		Uvi    float32 `json:"uvi"`
+		Rain   float32 `json:"rain,omitempty"`
 	} `json:"daily"`
 }
 

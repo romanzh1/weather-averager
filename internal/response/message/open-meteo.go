@@ -9,7 +9,7 @@ import (
 	"github.com/romanzh1/weather-averager/pkg/api/om"
 )
 
-func getWeatherOM(message string) string {
+func GetWeatherOM(message string) string {
 	percent := "%"
 	reply := ""
 
@@ -19,7 +19,7 @@ func getWeatherOM(message string) string {
 		if err != nil {
 			fmt.Println(err)
 		}
-		return fmt.Sprintf("Сейчас %.1f°, ощущается как %.1f°. Влажность %d%s\nСкорость ветра %.1f м/с. Вероятность осадков %d%s, %s",
+		return fmt.Sprintf("Сейчас %.1f°, ощущается как %.1f°. Влажность %.0f%s\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
 			dataWeather.Hourly.Temperature2M[hour], dataWeather.Hourly.ApparentTemperature[hour], dataWeather.Hourly.Cloudcover[hour], percent,
 			dataWeather.Hourly.Windspeed10M[hour], dataWeather.Hourly.Relativehumidity2M[hour], percent, getWeatherOMCondition(dataWeather.Hourly.Weathercode[hour])) //TODO change the sprintf to something else
 	}
@@ -36,7 +36,7 @@ func getWeatherOM(message string) string {
 		iHour := om.GetCurrentDateAndHour(dataWeather)
 
 		for i := iHour; i < iHour+12; i++ {
-			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %d%s.\nСкорость ветра %.1f м/с. Вероятность осадков %d%s, %s",
+			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %.0f%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
 				dataWeather.Hourly.Time[i][11:16], dataWeather.Hourly.Temperature2M[i], dataWeather.Hourly.ApparentTemperature[i], dataWeather.Hourly.Cloudcover[i], percent,
 				dataWeather.Hourly.Windspeed10M[i], dataWeather.Hourly.Relativehumidity2M[i], percent, getWeatherOMCondition(dataWeather.Hourly.Weathercode[i]))
 		}
@@ -58,7 +58,7 @@ func getWeatherOM(message string) string {
 		iHour := om.GetTomorrowDateAndHour(dataWeather)
 
 		for i := iHour; i < iHour+16; i++ {
-			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %d%s.\nСкорость ветра %.1f м/с. Вероятность осадков %d%s, %s",
+			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %.0f%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
 				dataWeather.Hourly.Time[i][11:16], dataWeather.Hourly.Temperature2M[i], dataWeather.Hourly.ApparentTemperature[i], dataWeather.Hourly.Cloudcover[i], percent,
 				dataWeather.Hourly.Windspeed10M[i], dataWeather.Hourly.Relativehumidity2M[i], percent, getWeatherOMCondition(dataWeather.Hourly.Weathercode[i]))
 		}
@@ -84,7 +84,7 @@ func getWeatherOM(message string) string {
 		iHour := om.GetCurrentDateAndHour(dataWeather)
 
 		for i := iHour; i < iHour+numberHours; i++ {
-			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %d%s.\nСкорость ветра %.1f м/с. Вероятность осадков %d%s, %s",
+			reply += fmt.Sprintf("\n\n%s %.1f°, ощущается как %.1f°. Влажность %.0f%s.\nСкорость ветра %.1f м/с. Вероятность осадков %.0f%s, %s",
 				dataWeather.Hourly.Time[i][11:16], dataWeather.Hourly.Temperature2M[i], dataWeather.Hourly.ApparentTemperature[i], dataWeather.Hourly.Cloudcover[i], percent,
 				dataWeather.Hourly.Windspeed10M[i], dataWeather.Hourly.Relativehumidity2M[i], percent, getWeatherOMCondition(dataWeather.Hourly.Weathercode[i]))
 		}
@@ -155,68 +155,68 @@ func getWeatherOM(message string) string {
 		return reply
 	}
 
-	return "Не корректно введены данные для прогнозирования"
+	return invalidRequest
 }
 
-func getWeatherOMCondition(code int) string {
+func getWeatherOMCondition(code float32) string {
 	condition := ""
 
 	switch code {
-	case 0:
+	case 0.0:
 		condition = "ясно🌞"
-	case 1:
+	case 1.0:
 		condition = "преимущественно ясно🌤"
-	case 2:
+	case 2.0:
 		condition = "переменная облачность☁️"
-	case 3:
+	case 3.0:
 		condition = "пасмурно☁"
-	case 45:
+	case 45.0:
 		condition = "туман🌫"
-	case 48:
+	case 48.0:
 		condition = "иней🌫"
-	case 51:
+	case 51.0:
 		condition = "легкая морось🌧"
-	case 53:
+	case 53.0:
 		condition = "умеренная морось🌧"
-	case 55:
+	case 55.0:
 		condition = "морось плотной интенсивности🌧"
-	case 56:
+	case 56.0:
 		condition = "слабый моросящий дождь🌧"
-	case 57:
+	case 57.0:
 		condition = "моросящий дождь🌧"
-	case 61:
+	case 61.0:
 		condition = "слабый дождь🌧"
-	case 63:
+	case 63.0:
 		condition = "средний дождь🌧"
-	case 65:
+	case 65.0:
 		condition = "сильный дождь🌧"
-	case 66:
+	case 66.0:
 		condition = "слабый ледяной дождь🌧🥶"
-	case 67:
+	case 67.0:
 		condition = "сильный ледяной дождь🌧🥶"
-	case 71:
+	case 71.0:
 		condition = "слабый снегопад🌨"
-	case 73:
+	case 73.0:
 		condition = "средний снегопад🌨"
-	case 75:
+	case 75.0:
 		condition = "сильный снегопад🌨"
-	case 77:
+	case 77.0:
 		condition = "снежные хлопья❄"
-	case 80:
+	case 80.0:
 		condition = "не большой ливень🌧"
-	case 81:
+	case 81.0:
 		condition = "средний ливень🌧"
-	case 82:
+	case 82.0:
 		condition = "сильный ливень🌧"
-	case 85:
+	case 85.0:
 		condition = "не большой снежный дождь❄🌧"
-	case 86:
+	case 86.0:
 		condition = "сильный снежный дождь❄🌧"
-	case 95:
+	case 95.0:
 		condition = "слабая гроза🌩"
-	case 96:
+	case 96.0:
 		condition = "гроза с небольшим градом🌩🧊"
-	case 99:
+	case 99.0:
 		condition = "гроза с сильным градом🌩🧊"
 	}
 

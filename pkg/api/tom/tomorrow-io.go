@@ -17,12 +17,12 @@ type Weather struct {
 			Intervals []struct {
 				StartTime time.Time `json:"startTime"`
 				Values    struct {
-					CloudCover          float64 `json:"cloudCover"`
-					Humidity            float64 `json:"humidity"`
-					Temperature         float64 `json:"temperature"`
-					TemperatureApparent float64 `json:"temperatureApparent"`
+					CloudCover          float32 `json:"cloudCover"`
+					Humidity            float32 `json:"humidity"`
+					Temperature         float32 `json:"temperature"`
+					TemperatureApparent float32 `json:"temperatureApparent"`
 					WeatherCode         int     `json:"weatherCode"`
-					WindSpeed           float64 `json:"windSpeed"`
+					WindSpeed           float32 `json:"windSpeed"`
 				} `json:"values"`
 			} `json:"intervals"`
 		} `json:"timelines"`
